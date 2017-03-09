@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -57,6 +59,26 @@ namespace TechJobsConsole
 
             return jobs;
         }
+
+        public static List<Dictionary<string, string>> FindByValue(string searchTerm)
+        {
+            LoadData();
+
+            List<Dictionary<string, string>> someJobs = new List<Dictionary<string, string>>();
+
+            foreach (Dictionary<string, string> job in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> field in job)
+                {                   
+                    if (!someJobs.Contains(job) && field.Value.Contains(searchTerm))
+                    {
+                        someJobs.Add(job);
+                    }              
+                }
+            }
+            return someJobs;
+        }
+
 
         /*
          * Load and parse data from job_data.csv
