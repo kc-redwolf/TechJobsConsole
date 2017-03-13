@@ -74,15 +74,14 @@ namespace TechJobsConsole
                     string valueLower = field.Value.ToLower();
 
                     if (!someJobs.Contains(row) && valueLower.Contains(searchTermLower))
-                        {
-                            someJobs.Add(row);
-
-                        }              
+                    {
+                        someJobs.Add(row);
+                    }              
                 }
             }
             return someJobs;
         }
-
+            
 
         /*
          * Load and parse data from job_data.csv
