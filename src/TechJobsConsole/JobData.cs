@@ -64,28 +64,32 @@ namespace TechJobsConsole
 
         public static List<Dictionary<string,string>> FindByValue(string value)
         {
+                     // load data, if not already loaded
             LoadData();
 
-            List<Dictionary<string, string>> someJobs = new List<Dictionary<string,string>>();
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
 
-            foreach (Dictionary<string, string> job in AllJobs)
+            foreach (Dictionary<string, string> row in AllJobs)
             {
-                string Keys = null;
-                string rowValues = job[Keys];
-                string userSearch = value.ToLower();
 
-                do
+                foreach (string key in row.Keys)
+                {
+                    string aValue = row[key];
+                    string userSearchTerm = value.ToLowerInvariant();
+
+
+                    if (aValue.ToLowerInvariant().Contains(userSearchTerm))
                     {
-                        if (rowValues.ToLower().Contains(userSearch))
-                        {
-                            someJobs.Add(job);
-                        }
-                    }
-                    while (!someJobs.Contains(job));
+                        jobs.Add(row);
 
-                    
+                        // Finding one field in a job that matches is sufficient
+
+                        break;
+                    }
+                }
             }
-            return someJobs;
+
+            return jobs;
         }
 
 
