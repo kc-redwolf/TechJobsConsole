@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
+
 
 namespace TechJobsConsole
 {
@@ -60,28 +62,32 @@ namespace TechJobsConsole
             return jobs;
         }
 
-        public static List<Dictionary<string, string>> FindByValue(string searchTerm)
+        public static List<Dictionary<string,string>> FindByValue(string value)
         {
             LoadData();
 
-            List<Dictionary<string, string>> someJobs = new List<Dictionary<string, string>>();
+            List<Dictionary<string, string>> someJobs = new List<Dictionary<string,string>>();
 
-            foreach (Dictionary<string, string> row in AllJobs)
+            foreach (Dictionary<string, string> job in AllJobs)
             {
-                foreach (KeyValuePair<string, string> field in row)
-                {
-                    string searchTermLower = searchTerm.ToLower();
-                    string valueLower = field.Value.ToLower();
+                string Keys = null;
+                string rowValues = job[Keys];
+                string userSearch = value.ToLower();
 
-                    if (!someJobs.Contains(row) && valueLower.Contains(searchTermLower))
+                do
                     {
-                        someJobs.Add(row);
-                    }              
-                }
+                        if (rowValues.ToLower().Contains(userSearch))
+                        {
+                            someJobs.Add(job);
+                        }
+                    }
+                    while (!someJobs.Contains(job));
+
+                    
             }
             return someJobs;
         }
-            
+
 
         /*
          * Load and parse data from job_data.csv
