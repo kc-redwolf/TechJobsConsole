@@ -5,6 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Collections;
+using System.Globalization;
+using System.Threading;
 
 
 namespace TechJobsConsole
@@ -36,13 +39,13 @@ namespace TechJobsConsole
 
                 if (!values.Contains(aValue))
                 {
-                    values.Add(aValue);
+                    values.Add(aValue.ToUpperInvariant());
                 }
             }
             return values;
         }
 
-        public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
+        public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string searchKeyWord)
         {
             // load data, if not already loaded
             LoadData();
@@ -53,7 +56,7 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
-                if (aValue.Contains(value))
+                if (aValue.IndexOf(searchKeyWord, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     jobs.Add(row);
                 }
@@ -62,34 +65,29 @@ namespace TechJobsConsole
             return jobs;
         }
 
-        public static List<Dictionary<string,string>> FindByValue(string value)
+        public static List<Dictionary<string,string>> FindByValue(string searchTerm)
         {
                      // load data, if not already loaded
             LoadData();
 
-            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+            List<Dictionary<string, string>> someJobs = new List<Dictionary<string, string>>();
 
             foreach (Dictionary<string, string> row in AllJobs)
             {
 
-                foreach (string key in row.Keys)
+                foreach (KeyValuePair<string, string> field in row)
                 {
-                    string aValue = row[key];
-                    string userSearchTerm = value.ToLowerInvariant();
-
-
-                    if (aValue.ToLowerInvariant().Contains(userSearchTerm))
+                    string aValue = field.Value.ToUpperInvariant();
+                    
+                    if (aValue.IndexOf(searchTerm.ToUpperInvariant(), StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        jobs.Add(row);
-
-                        // Finding one field in a job that matches is sufficient
-
+                        someJobs.Add(row);
                         break;
                     }
                 }
             }
 
-            return jobs;
+            return someJobs;
         }
 
 
